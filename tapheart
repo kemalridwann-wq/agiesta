@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Catch My Heart ❤️</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #fff1f5, #fce4ec, #f9e9ff);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        color: #5b4050;
+    }
+
+    .game-wrapper {
+        width: 100%;
+        max-width: 430px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .game-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.8);
+        border-radius: 30px;
+        padding: 25px 18px 20px;
+        box-shadow: 0 15px 45px rgba(160, 100, 130, 0.15);
+    }
+
+    .title {
+        font-family: Georgia, serif;
+        font-size: 30px;
+        color: #b85c7b;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        color: #967080;
+        margin-bottom: 18px;
+    }
+
+    .score-area {
+        display: flex;
+        justify-content: space-between;
+        background: #fff7fa;
+        border-radius: 18px;
+        padding: 12px 18px;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    .score-area strong {
+        color: #c65378;
+    }
+
+    #gameArea {
+        position: relative;
+        width: 100%;
+        height: 470px;
+        overflow: hidden;
+        border-radius: 25px;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255,255,255,.9), transparent 20%),
+            radial-gradient(circle at 80% 70%, rgba(255,220,235,.7), transparent 25%),
+            linear-gradient(180deg, #fff8fb, #fcecf3);
+        border: 1px solid rgba(220,160,180,.2);
+    }
+
+    .heart {
+        position: absolute;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        font-size: 38px;
+        animation: appear .25s ease-out, float 1.8s ease-in-out infinite;
+        filter: drop-shadow(0 5px 7px rgba(180, 70, 110, .25));
+        transition: transform .15s;
+        z-index: 5;
+    }
+
+    .heart:active {
+        transform: scale(.7);
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: scale(0);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            margin-top: 0;
+        }
+
+        50% {
+            margin-top: -8px;
+        }
+    }
+
+    .particle {
+        position: absolute;
+        pointer-events: none;
+        font-size: 18px;
+        animation: particle 700ms ease-out forwards;
+        z-index: 10;
+    }
+
+    @keyframes particle {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translate(var(--x), var(--y)) scale(.3);
+        }
+    }
+
+    .start-screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        background: rgba(255,248,251,.94);
+        z-index: 20;
+    }
+
+    .start-heart {
+        font-size: 70px;
+        animation: heartbeat 1.2s infinite;
+        margin-bottom: 15px;
+    }
+
+    @keyframes heartbeat {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.15);
+        }
+    }
+
+    .start-screen h2 {
+        font-family: Georgia, serif;
+        color: #b85c7b;
+        margin-bottom: 8px;
+    }
+
+    .start-screen p {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #876a77;
+        margin-bottom: 20px;
+    }
+
+    button {
+        border: none;
+        background: linear-gradient(135deg, #d76b8c, #bd5577);
+        color: white;
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(190,80,120,.25);
+        transition: .2s;
+    }
+
+    button:active {
+        transform: scale(.95);
+    }
+
+    .result {
+        position: absolute;
+        inset: 0;
+        background: rgba(255,248,251,.96);
+        z-index: 30;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .result.show {
+        display: flex;
+    }
+
+    .result .big-heart {
+        font-size: 70px;
+        margin-bottom: 15px;
+        animation: heartbeat 1.2s infinite;
+    }
+
+    .result h2 {
+        font-family: Georgia, serif;
+        color: #b84f73;
+        margin-bottom: 12px;
+    }
+
+    .result p {
+        font-size: 14px;
+        line-height: 1.8;
+        color: #755c68;
+        margin-bottom: 20px;
+    }
+
+    .success-message {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #b45a77;
+    }
+
+    @media (max-width: 380px) {
+        #gameArea {
+            height: 420px;
+        }
+
+        .title {
+            font-size: 26px;
+        }
+
+        .heart {
+            font-size: 34px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game-wrapper">
+
+    <div class="game-card">
+
+        <h1 class="title">Catch My Heart ❤️</h1>
+
+        <p class="subtitle">
+            Tangkap semua hati sebelum waktunya habis.
+        </p>
+
+        <div class="score-area">
+            <span>❤️ Hati: <strong id="score">0</strong>/15</span>
+            <span>⏱️ Waktu: <strong id="timer">20</strong></span>
+        </div>
+
+        <div id="gameArea">
+
+            <!-- START -->
+            <div class="start-screen" id="startScreen">
+
+                <div class="start-heart">❤️</div>
+
+                <h2>Ada sedikit permainan untukmu...</h2>
+
+                <p>
+                    Katanya kalau kamu bisa menangkap semua hati di sini,
+                    kamu berhak mendapatkan sesuatu yang spesial. 🤍
+                </p>
+
+                <button onclick="startGame()">
+                    Mulai Game 💕
+                </button>
+
+            </div>
+
+            <!-- RESULT -->
+            <div class="result" id="resultScreen">
+
+                <div class="big-heart">💗</div>
+
+                <h2 id="resultTitle">
+                    Kamu berhasil!
+                </h2>
+
+                <p id="resultText">
+                    Ternyata semua hati ini memang
+                    cocoknya jatuh ke kamu.
+                </p>
+
+                <button onclick="startGame()">
+                    Main Lagi ❤️
+                </button>
+
+            </div>
+
+        </div>
+
+        <p class="success-message">
+            Psst... ada kejutan setelah kamu berhasil 😉
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let score = 0;
+let timeLeft = 20;
+let gameRunning = false;
+let timerInterval;
+let heartInterval;
+
+const targetScore = 15;
+
+const gameArea = document.getElementById("gameArea");
+const scoreElement = document.getElementById("score");
+const timerElement = document.getElementById("timer");
+const startScreen = document.getElementById("startScreen");
+const resultScreen = document.getElementById("resultScreen");
+const resultTitle = document.getElementById("resultTitle");
+const resultText = document.getElementById("resultText");
+
+
+function startGame() {
+
+    // Reset
+    score = 0;
+    timeLeft = 20;
+    gameRunning = true;
+
+    scoreElement.textContent = score;
+    timerElement.textContent = timeLeft;
+
+    startScreen.style.display = "none";
+    resultScreen.classList.remove("show");
+
+    // Bersihkan hati lama
+    document.querySelectorAll(".heart").forEach(heart => {
+        heart.remove();
+    });
+
+    clearInterval(timerInterval);
+    clearInterval(heartInterval);
+
+    // Timer
+    timerInterval = setInterval(() => {
+
+        timeLeft--;
+
+        timerElement.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            endGame(false);
+        }
+
+    }, 1000);
+
+
+    // Munculkan hati
+    heartInterval = setInterval(() => {
+
+        if (gameRunning) {
+            createHeart();
+        }
+
+    }, 650);
+
+}
+
+
+function createHeart() {
+
+    if (!gameRunning) return;
+
+    const heart = document.createElement("div");
+
+    heart.className = "heart";
+
+    // Variasi hati
+    const hearts = [
+        "❤️",
+        "💗",
+        "💖",
+        "💕",
+        "💓"
+    ];
+
+    heart.textContent =
+        hearts[Math.floor(Math.random() * hearts.length)];
+
+    const areaWidth = gameArea.clientWidth;
+    const areaHeight = gameArea.clientHeight;
+
+    const maxX = areaWidth - 55;
+    const maxY = areaHeight - 70;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    heart.style.left = `${x}px`;
+    heart.style.top = `${y}px`;
+
+    heart.addEventListener("click", function(e) {
+
+        if (!gameRunning) return;
+
+        score++;
+
+        scoreElement.textContent = score;
+
+        createParticles(
+            e.clientX,
+            e.clientY
+        );
+
+        heart.remove();
+
+        if (score >= targetScore) {
+            endGame(true);
+        }
+
+    });
+
+    gameArea.appendChild(heart);
+
+    // Hapus otomatis jika tidak diklik
+    setTimeout(() => {
+
+        if (heart.parentNode) {
+            heart.remove();
+        }
+
+    }, 1800);
+}
+
+
+function createParticles(x, y) {
+
+    const particles = [
+        "💕",
+        "✨",
+        "💗",
+        "♡"
+    ];
+
+    for (let i = 0; i < 6; i++) {
+
+        const particle = document.createElement("div");
+
+        particle.className = "particle";
+
+        particle.textContent =
+            particles[Math.floor(Math.random() * particles.length)];
+
+        particle.style.left =
+            `${x - gameArea.getBoundingClientRect().left}px`;
+
+        particle.style.top =
+            `${y - gameArea.getBoundingClientRect().top}px`;
+
+        particle.style.setProperty(
+            "--x",
+            `${(Math.random() - .5) * 100}px`
+        );
+
+        particle.style.setProperty(
+            "--y",
+            `${(Math.random() - .5) * 100}px`
+        );
+
+        gameArea.appendChild(particle);
+
+        setTimeout(() => {
+            particle.remove();
+        }, 700);
+    }
+}
+
+
+function endGame(success) {
+
+    gameRunning = false;
+
+    clearInterval(timerInterval);
+    clearInterval(heartInterval);
+
+    document.querySelectorAll(".heart").forEach(heart => {
+        heart.remove();
+    });
+
+
+    if (success) {
+
+        resultTitle.textContent =
+            "Kamu berhasil menangkap semuanya! 💗";
+
+        resultText.innerHTML =
+            `Dari sekian banyak hati yang ada di dunia,<br>
+            entah kenapa hatiku selalu memilih kamu.<br><br>
+            <strong>Happy Birthday, sayang. ❤️</strong>`;
+
+    } else {
+
+        resultTitle.textContent =
+            "Waktunya habis 😆";
+
+        resultText.innerHTML =
+            `Kamu berhasil menangkap ${score} hati.<br><br>
+            Tapi tenang... ada satu hati yang nggak perlu kamu tangkap,<br>
+            karena dari awal memang sudah jadi milik kamu. ❤️`;
+
+    }
+
+    resultScreen.classList.add("show");
+}
+
+</script>
+
+</body>
+</html>
