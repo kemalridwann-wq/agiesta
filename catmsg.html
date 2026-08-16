@@ -742,14 +742,14 @@ body {
             </p>
 
         </div>
-        <a
-    href="index.html"
+        <button
+    type="button"
     class="back-home-btn"
     id="backHomeButton"
+    onclick="goBackHome()"
 >
     ← Kembali ke halaman utama
-</a>
-
+</button>
 
     </div>
 
@@ -1027,6 +1027,10 @@ function finishAnimation() {
 
     }, 800);
 
+}
+
+   function goBackHome() {
+    window.history.back();
 }
 </script>
 
